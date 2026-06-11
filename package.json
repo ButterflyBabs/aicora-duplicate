@@ -1,0 +1,11 @@
+{
+  "name": "aicora-duplicate",
+  "version": "1.0.0",
+  "description": "Duplicate of AI Cora dashboard",
+  "scripts": {
+    "start": "npx serve -s .",
+    "build": "echo 'Static site - no build needed'"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}
