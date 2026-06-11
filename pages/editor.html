@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Cora - Editor</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f7fa;
+        }
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 250px;
+            height: 100vh;
+            background: #1a1a2e;
+            color: white;
+            padding: 20px;
+        }
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .sidebar-logo img {
+            height: 40px;
+            margin-right: 10px;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            margin: 5px 0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+            text-decoration: none;
+            color: rgba(255,255,255,0.7);
+        }
+        .nav-item:hover, .nav-item.active {
+            background: rgba(102, 126, 234, 0.2);
+            color: white;
+        }
+        .main-content {
+            margin-left: 250px;
+            padding: 30px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 1px solid #667eea;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-right: 10px;
+        }
+        .editor-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+        .editor-toolbar {
+            padding: 15px 20px;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .toolbar-btn {
+            padding: 8px 12px;
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .toolbar-btn:hover {
+            background: #e9ecef;
+        }
+        .editor-title {
+            padding: 20px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .editor-title input {
+            width: 100%;
+            font-size: 24px;
+            font-weight: 600;
+            border: none;
+            outline: none;
+        }
+        .editor-body {
+            padding: 20px;
+            min-height: 400px;
+        }
+        .editor-body textarea {
+            width: 100%;
+            min-height: 400px;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            line-height: 1.6;
+            resize: vertical;
+            font-family: inherit;
+        }
+        .editor-sidebar {
+            position: fixed;
+            right: 30px;
+            top: 100px;
+            width: 280px;
+        }
+        .sidebar-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .sidebar-card h3 {
+            margin: 0 0 15px 0;
+            font-size: 14px;
+            color: #666;
+            text-transform: uppercase;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 13px;
+            color: #666;
+        }
+        .form-group select,
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+        }
+        .ai-assist {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        .ai-assist h4 {
+            margin: 0 0 10px 0;
+        }
+        .ai-assist button {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            margin: 5px 5px 0 0;
+        }
+        .page-nav {
+            position: fixed;
+            top: 20px;
+            right: 320px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+        .page-nav h3 { margin: 0 0 10px 0; font-size: 14px; }
+        .page-nav a {
+            display: block;
+            padding: 5px 0;
+            color: #667eea;
+            text-decoration: none;
+            font-size: 13px;
+        }
+        .page-nav a.active { font-weight: bold; color: #764ba2; }
+    </style>
+</head>
+<body>
+    <div class="page-nav">
+        <h3>📄 Pages</h3>
+        <a href="login.html">Login</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="agents.html">Agents</a>
+        <a href="clients.html">Clients</a>
+        <a href="chats.html">Chats</a>
+        <a href="content.html">Content</a>
+        <a href="editor.html" class="active">Editor</a>
+        <a href="schedule.html">Schedule</a>
+        <a href="integrations.html">Integrations</a>
+        <a href="help.html">Help</a>
+        <a href="settings.html">Settings</a>
+    </div>
+
+    <div class="sidebar">
+        <div class="sidebar-logo">
+            <img src="../logo-sm.png" alt="AI Cora" style="height:40px;margin-right:10px;">
+            <span>AI Cora</span>
+        </div>
+        <a href="dashboard.html" class="nav-item">📊 Dashboard</a>
+        <a href="agents.html" class="nav-item">🤖 Agents</a>
+        <a href="clients.html" class="nav-item">👥 Clients</a>
+        <a href="chats.html" class="nav-item">💬 Chats</a>
+        <a href="content.html" class="nav-item">📝 Content</a>
+        <a href="schedule.html" class="nav-item">📅 Schedule</a>
+        <a href="integrations.html" class="nav-item">🔌 Integrations</a>
+        <a href="help.html" class="nav-item">❓ Help</a>
+        <a href="settings.html" class="nav-item">⚙️ Settings</a>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <h1>Content Editor</h1>
+            <div>
+                <button class="btn-secondary">Save Draft</button>
+                <button class="btn-primary">Publish</button>
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 20px;">
+            <div style="flex: 1; margin-right: 300px;">
+                <div class="editor-container">
+                    <div class="editor-toolbar">
+                        <button class="toolbar-btn"><b>B</b></button>
+                        <button class="toolbar-btn"><i>I</i></button>
+                        <button class="toolbar-btn"><u>U</u></button>
+                        <button class="toolbar-btn">H1</button>
+                        <button class="toolbar-btn">H2</button>
+                        <button class="toolbar-btn">• List</button>
+                        <button class="toolbar-btn">1. List</button>
+                        <button class="toolbar-btn">🔗 Link</button>
+                        <button class="toolbar-btn">🖼️ Image</button>
+                    </div>
+                    <div class="editor-title">
+                        <input type="text" placeholder="Enter title here..." value="10 Ways AI Can Transform Your Business">
+                    </div>
+                    <div class="editor-body">
+                        <textarea placeholder="Start writing your content here...">Artificial Intelligence is revolutionizing the way businesses operate. From customer service to content creation, AI tools are helping companies work smarter, not harder.
+
+In this article, we'll explore 10 practical ways you can leverage AI to transform your business operations and drive growth.
+
+1. Automate Customer Support
+AI-powered chatbots can handle routine customer inquiries 24/7, freeing up your human agents to focus on complex issues.
+
+2. Personalize Marketing
+Use AI to analyze customer data and deliver personalized content recommendations.
+
+3. Streamline Content Creation
+AI writing assistants can help you draft blog posts, social media content, and email campaigns faster.
+
+[Continue writing...]</textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="editor-sidebar">
+                <div class="sidebar-card">
+                    <h3>Publish Settings</h3>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select>
+                            <option>Draft</option>
+                            <option>Published</option>
+                            <option>Scheduled</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select>
+                            <option>AI & Technology</option>
+                            <option>Business</option>
+                            <option>Marketing</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Tags</label>
+                        <input type="text" placeholder="Add tags...">
+                    </div>
+                </div>
+
+                <div class="sidebar-card">
+                    <h3>AI Assistant</h3>
+                    <div class="ai-assist">
+                        <h4>🤖 Need help?</h4>
+                        <p style="font-size: 13px; margin: 10px 0;">Let AI help you improve your content</p>
+                        <button>Improve Writing</button>
+                        <button>Generate Title</button>
+                        <button>Summarize</button>
+                        <button>Check Grammar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

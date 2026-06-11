@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Cora - Agents</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f7fa;
+        }
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 250px;
+            height: 100vh;
+            background: #1a1a2e;
+            color: white;
+            padding: 20px;
+        }
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .sidebar-logo img {
+            height: 40px;
+            margin-right: 10px;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            margin: 5px 0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+            text-decoration: none;
+            color: rgba(255,255,255,0.7);
+        }
+        .nav-item:hover, .nav-item.active {
+            background: rgba(102, 126, 234, 0.2);
+            color: white;
+        }
+        .main-content {
+            margin-left: 250px;
+            padding: 30px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .agents-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .agent-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: transform 0.2s;
+        }
+        .agent-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        }
+        .agent-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .agent-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            margin-right: 15px;
+        }
+        .agent-info h3 {
+            margin: 0;
+            color: #333;
+        }
+        .agent-info span {
+            color: #999;
+            font-size: 13px;
+        }
+        .agent-status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status-inactive {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .agent-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        .agent-stat {
+            text-align: center;
+        }
+        .agent-stat-value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        .agent-stat-label {
+            font-size: 12px;
+            color: #999;
+        }
+        .page-nav {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+        .page-nav h3 { margin: 0 0 10px 0; font-size: 14px; }
+        .page-nav a {
+            display: block;
+            padding: 5px 0;
+            color: #667eea;
+            text-decoration: none;
+            font-size: 13px;
+        }
+        .page-nav a.active { font-weight: bold; color: #764ba2; }
+    </style>
+</head>
+<body>
+    <div class="page-nav">
+        <h3>📄 Pages</h3>
+        <a href="login.html">Login</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="agents.html" class="active">Agents</a>
+        <a href="clients.html">Clients</a>
+        <a href="chats.html">Chats</a>
+        <a href="content.html">Content</a>
+        <a href="editor.html">Editor</a>
+        <a href="schedule.html">Schedule</a>
+        <a href="integrations.html">Integrations</a>
+        <a href="help.html">Help</a>
+        <a href="settings.html">Settings</a>
+    </div>
+
+    <div class="sidebar">
+        <div class="sidebar-logo">
+            <img src="../logo-sm.png" alt="AI Cora" style="height:40px;margin-right:10px;">
+            <span>AI Cora</span>
+        </div>
+        <a href="dashboard.html" class="nav-item">📊 Dashboard</a>
+        <a href="agents.html" class="nav-item active">🤖 Agents</a>
+        <a href="clients.html" class="nav-item">👥 Clients</a>
+        <a href="chats.html" class="nav-item">💬 Chats</a>
+        <a href="content.html" class="nav-item">📝 Content</a>
+        <a href="schedule.html" class="nav-item">📅 Schedule</a>
+        <a href="integrations.html" class="nav-item">🔌 Integrations</a>
+        <a href="help.html" class="nav-item">❓ Help</a>
+        <a href="settings.html" class="nav-item">⚙️ Settings</a>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <h1>AI Agents</h1>
+            <button class="btn-primary">+ Create New Agent</button>
+        </div>
+
+        <div class="agents-grid">
+            <div class="agent-card">
+                <div class="agent-header">
+                    <div class="agent-avatar">🤖</div>
+                    <div class="agent-info">
+                        <h3>Customer Support Bot</h3>
+                        <span>Support</span>
+                    </div>
+                </div>
+                <span class="agent-status status-active">Active</span>
+                <div class="agent-stats">
+                    <div class="agent-stat">
+                        <div class="agent-stat-value">1.2k</div>
+                        <div class="agent-stat-label">Conversations</div>
+                    </div>
+                    <div class="agent-stat">
+                        <div class="agent-stat-value">94%</div>
+                        <div class="agent-stat-label">Satisfaction</div>
+                    </div>
+                    <div class="agent-stat">
+                        <div class="agent-stat-value">24/7</div>
+                        <div class="agent-stat-label">Uptime</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="agent-card">
+                <div class="agent-header">
+                    <div class="agent-avatar">💼</div>
+                    <div class="agent-info">
+                        <h3>Sales Assistant</h3>
+                        <span>Sales</span>
+                    </div>
+                </div>
+                <span class="agent-status status-active">Active</span>
+                <div class="agent-stats">
+                    <div class="agent-stat">
+                        <div class="agent-stat-value">856</div>
+                        <div class="agent-stat-label">Leads</div>
+                    </div>
+                    <div class="agent-stat">
+                        <div class="agent-stat-value">23%</div>
+                        <div class="agent-stat-label">Conversion</div>
+                    </div>
+                    <div class="agent-stat">
+                        <div class="agent-stat-value">18h</div>
+                        <div class="agent-stat-label">Avg Response</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="agent-card">
+                <div class="agent-header">
+                    <div class="agent-avatar">📱</div>
+                    <div class="agent-info">
+                        <h3>Social Media Bot</h3>
+                        <span>Marketing</span>
+                    </div>
+                </div>
+                <span class="agent-status status-inactive">Inactive</span>
+                <div class="agent-stats">
+                    <div class="agent-stat">
+                        <div class="agent-stat-value">432</div>
+                        <div class="agent-stat-label">Posts</div>
+                    </div>
+                    <div class="agent-stat">
+                        <div class="agent-stat-value">12k</div>
+                        <div class="agent-stat-label">Engagement</div>
+                    </div>
+                    <div class="agent-stat">
+                        <div class="agent-stat-value">3d</div>
+                        <div class="agent-stat-label">Last Active</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

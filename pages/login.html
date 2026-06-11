@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Cora - Login</title>
+    <link rel="stylesheet" href="../assets/index-DeFJ5J64.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .login-container {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 400px;
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .logo img {
+            height: 60px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+        }
+        .links {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .links a {
+            color: #667eea;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        .links a:hover {
+            text-decoration: underline;
+        }
+        .page-nav {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .page-nav h3 {
+            margin: 0 0 10px 0;
+            font-size: 14px;
+            color: #333;
+        }
+        .page-nav a {
+            display: block;
+            padding: 5px 0;
+            color: #667eea;
+            text-decoration: none;
+            font-size: 13px;
+        }
+        .page-nav a:hover {
+            text-decoration: underline;
+        }
+        .page-nav a.active {
+            font-weight: bold;
+            color: #764ba2;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-nav">
+        <h3>📄 Pages</h3>
+        <a href="login.html" class="active">Login</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="agents.html">Agents</a>
+        <a href="clients.html">Clients</a>
+        <a href="chats.html">Chats</a>
+        <a href="content.html">Content</a>
+        <a href="editor.html">Editor</a>
+        <a href="schedule.html">Schedule</a>
+        <a href="integrations.html">Integrations</a>
+        <a href="help.html">Help & Support</a>
+        <a href="settings.html">Settings</a>
+    </div>
+
+    <div class="login-container">
+        <div class="logo">
+            <img src="../logo-sm.png" alt="AI Cora">
+        </div>
+        <h1>Welcome Back</h1>
+        <form>
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" placeholder="Enter your email">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" placeholder="Enter your password">
+            </div>
+            <button type="submit">Sign In</button>
+        </form>
+        <div class="links">
+            <a href="forgot-password.html">Forgot Password?</a>
+            <a href="signup.html">Create Account</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Cora - Schedule</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f7fa;
+        }
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 250px;
+            height: 100vh;
+            background: #1a1a2e;
+            color: white;
+            padding: 20px;
+        }
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .sidebar-logo img {
+            height: 40px;
+            margin-right: 10px;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            margin: 5px 0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+            text-decoration: none;
+            color: rgba(255,255,255,0.7);
+        }
+        .nav-item:hover, .nav-item.active {
+            background: rgba(102, 126, 234, 0.2);
+            color: white;
+        }
+        .main-content {
+            margin-left: 250px;
+            padding: 30px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .calendar-nav {
+            display: flex;
+            gap: 10px;
+        }
+        .calendar-nav button {
+            background: white;
+            border: 1px solid #ddd;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        .calendar-grid {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .calendar-weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .calendar-weekday {
+            padding: 15px;
+            text-align: center;
+            font-weight: 600;
+            color: #666;
+        }
+        .calendar-days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+        }
+        .calendar-day {
+            min-height: 120px;
+            padding: 10px;
+            border-right: 1px solid #e9ecef;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .calendar-day:nth-child(7n) {
+            border-right: none;
+        }
+        .day-number {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .day-number.other-month {
+            color: #ccc;
+        }
+        .day-number.today {
+            background: #667eea;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .scheduled-item {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            margin-bottom: 4px;
+            cursor: pointer;
+        }
+        .scheduled-item.social {
+            background: #1da1f2;
+        }
+        .scheduled-item.blog {
+            background: #ff6b6b;
+        }
+        .scheduled-item.email {
+            background: #4ecdc4;
+        }
+        .upcoming-list {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .upcoming-list h2 {
+            margin: 0 0 20px 0;
+        }
+        .upcoming-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .upcoming-item:last-child {
+            border-bottom: none;
+        }
+        .upcoming-date {
+            background: #f8f9fa;
+            padding: 10px 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin-right: 15px;
+        }
+        .upcoming-date .day {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        .upcoming-date .month {
+            font-size: 12px;
+            color: #999;
+            text-transform: uppercase;
+        }
+        .upcoming-info {
+            flex: 1;
+        }
+        .upcoming-info h4 {
+            margin: 0 0 5px 0;
+        }
+        .upcoming-info p {
+            margin: 0;
+            color: #999;
+            font-size: 13px;
+        }
+        .upcoming-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .upcoming-actions button {
+            background: none;
+            border: 1px solid #ddd;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        .page-nav {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+        .page-nav h3 { margin: 0 0 10px 0; font-size: 14px; }
+        .page-nav a {
+            display: block;
+            padding: 5px 0;
+            color: #667eea;
+            text-decoration: none;
+            font-size: 13px;
+        }
+        .page-nav a.active { font-weight: bold; color: #764ba2; }
+    </style>
+</head>
+<body>
+    <div class="page-nav">
+        <h3>📄 Pages</h3>
+        <a href="login.html">Login</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="agents.html">Agents</a>
+        <a href="clients.html">Clients</a>
+        <a href="chats.html">Chats</a>
+        <a href="content.html">Content</a>
+        <a href="editor.html">Editor</a>
+        <a href="schedule.html" class="active">Schedule</a>
+        <a href="integrations.html">Integrations</a>
+        <a href="help.html">Help</a>
+        <a href="settings.html">Settings</a>
+    </div>
+
+    <div class="sidebar">
+        <div class="sidebar-logo">
+            <img src="../logo-sm.png" alt="AI Cora" style="height:40px;margin-right:10px;">
+            <span>AI Cora</span>
+        </div>
+        <a href="dashboard.html" class="nav-item">📊 Dashboard</a>
+        <a href="agents.html" class="nav-item">🤖 Agents</a>
+        <a href="clients.html" class="nav-item">👥 Clients</a>
+        <a href="chats.html" class="nav-item">💬 Chats</a>
+        <a href="content.html" class="nav-item">📝 Content</a>
+        <a href="schedule.html" class="nav-item active">📅 Schedule</a>
+        <a href="integrations.html" class="nav-item">🔌 Integrations</a>
+        <a href="help.html" class="nav-item">❓ Help</a>
+        <a href="settings.html" class="nav-item">⚙️ Settings</a>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <h1>Content Calendar</h1>
+            <button class="btn-primary">+ Schedule Content</button>
+        </div>
+
+        <div class="calendar-header">
+            <h2>January 2024</h2>
+            <div class="calendar-nav">
+                <button>← Prev</button>
+                <button>Today</button>
+                <button>Next →</button>
+            </div>
+        </div>
+
+        <div class="calendar-grid">
+            <div class="calendar-weekdays">
+                <div class="calendar-weekday">Sun</div>
+                <div class="calendar-weekday">Mon</div>
+                <div class="calendar-weekday">Tue</div>
+                <div class="calendar-weekday">Wed</div>
+                <div class="calendar-weekday">Thu</div>
+                <div class="calendar-weekday">Fri</div>
+                <div class="calendar-weekday">Sat</div>
+            </div>
+            <div class="calendar-days">
+                <div class="calendar-day"><div class="day-number other-month">31</div></div>
+                <div class="calendar-day"><div class="day-number">1</div></div>
+                <div class="calendar-day"><div class="day-number">2</div></div>
+                <div class="calendar-day"><div class="day-number">3</div></div>
+                <div class="calendar-day"><div class="day-number">4</div><div class="scheduled-item blog">Blog Post</div></div>
+                <div class="calendar-day"><div class="day-number">5</div></div>
+                <div class="calendar-day"><div class="day-number">6</div></div>
+                <div class="calendar-day"><div class="day-number">7</div></div>
+                <div class="calendar-day"><div class="day-number">8</div><div class="scheduled-item social">Social Post</div></div>
+                <div class="calendar-day"><div class="day-number">9</div></div>
+                <div class="calendar-day"><div class="day-number">10</div></div>
+                <div class="calendar-day"><div class="day-number">11</div><div class="scheduled-item email">Newsletter</div></div>
+                <div class="calendar-day"><div class="day-number">12</div></div>
+                <div class="calendar-day"><div class="day-number">13</div></div>
+                <div class="calendar-day"><div class="day-number today">14</div><div class="scheduled-item social">Instagram</div></div>
+                <div class="calendar-day"><div class="day-number">15</div><div class="scheduled-item blog">Article</div></div>
+                <div class="calendar-day"><div class="day-number">16</div></div>
+                <div class="calendar-day"><div class="day-number">17</div></div>
+                <div class="calendar-day"><div class="day-number">18</div></div>
+                <div class="calendar-day"><div class="day-number">19</div></div>
+                <div class="calendar-day"><div class="day-number">20</div><div class="scheduled-item email">Email</div></div>
+            </div>
+        </div>
+
+        <div class="upcoming-list">
+            <h2>Upcoming Scheduled Content</h2>
+            <div class="upcoming-item">
+                <div class="upcoming-date">
+                    <div class="day">15</div>
+                    <div class="month">Jan</div>
+                </div>
+                <div class="upcoming-info">
+                    <h4>Blog Post: AI Trends 2024</h4>
+                    <p>Scheduled for 9:00 AM • Blog</p>
+                </div>
+                <div class="upcoming-actions">
+                    <button>Edit</button>
+                    <button>Delete</button>
+                </div>
+            </div>
+            <div class="upcoming-item">
+                <div class="upcoming-date">
+                    <div class="day">16</div>
+                    <div class="month">Jan</div>
+                </div>
+                <div class="upcoming-info">
+                    <h4>LinkedIn Article: Industry Insights</h4>
+                    <p>Scheduled for 2:00 PM • Social</p>
+                </div>
+                <div class="upcoming-actions">
+                    <button>Edit</button>
+                    <button>Delete</button>
+                </div>
+            </div>
+            <div class="upcoming-item">
+                <div class="upcoming-date">
+                    <div class="day">18</div>
+                    <div class="month">Jan</div>
+                </div>
+                <div class="upcoming-info">
+                    <h4>Weekly Newsletter</h4>
+                    <p>Scheduled for 10:00 AM • Email</p>
+                </div>
+                <div class="upcoming-actions">
+                    <button>Edit</button>
+                    <button>Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
